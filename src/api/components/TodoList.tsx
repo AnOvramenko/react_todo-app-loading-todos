@@ -4,16 +4,16 @@ import { TodoItem } from './TodoItem';
 
 interface Props {
   todos: Todo[];
-  OnChangeTodoStatus: (id: number) => void;
-  OnDelete: (id: number) => void;
-  OnUpdateTodo: (todo: Todo) => void;
+  onChangeTodoStatus: (id: number) => void;
+  onDelete: (id: number) => void;
+  onUpdateTodo: (todo: Todo) => void;
 }
 
 export const TodoList: React.FC<Props> = ({
   todos,
-  OnChangeTodoStatus,
-  OnDelete,
-  OnUpdateTodo,
+  onChangeTodoStatus,
+  onDelete,
+  onUpdateTodo,
 }) => {
   return (
     <section className="todoapp__main" data-cy="TodoList">
@@ -22,11 +22,49 @@ export const TodoList: React.FC<Props> = ({
           <TodoItem
             todo={todo}
             key={todo.id}
-            OnChangeTodoStatus={OnChangeTodoStatus}
-            OnDelete={OnDelete}
-            OnUpdateTodo={OnUpdateTodo}
+            onChangeTodoStatus={onChangeTodoStatus}
+            onDelete={onDelete}
+            onUpdateTodo={onUpdateTodo}
           />
         );
+        // return (
+        //   <div
+        //     key={todo.id}
+        //     data-cy="Todo"
+        //     className={cn('todo', {
+        //       completed: todo.completed,
+        //     })}
+        //   >
+        //     <label className="todo__status-label">
+        //       <input
+        //         data-cy="TodoStatus"
+        //         type="checkbox"
+        //         className={cn('todo__status', {
+        //           checked: todo.completed,
+        //         })}
+        //         onChange={() => handleOnChangeTodoStatus(todo.id)}
+        //         checked={todo.completed}
+        //       />
+        //     </label>
+
+        //     <span data-cy="TodoTitle" className="todo__title">
+        //       {todo.title}
+        //     </span>
+        //     <button
+        //       type="button"
+        //       className="todo__remove"
+        //       data-cy="TodoDelete"
+        //       onClick={() => handleOnDelete(todo.id)}
+        //     >
+        //       ×
+        //     </button>
+
+        //     <div data-cy="TodoLoader" className="modal overlay">
+        //       <div className="modal-background has-background-white-ter" />
+        //       <div className="loader" />
+        //     </div>
+        //   </div>
+        // );
       })}
     </section>
   );

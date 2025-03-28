@@ -37,11 +37,18 @@ export const App: React.FC = () => {
       .then(setTodos)
       .catch(() => {
         setErrorMessage(ErrorMessage.TODO_LOAD);
-        setTimeout(() => {
-          setErrorMessage(ErrorMessage.DEFAULT);
-        }, 3000);
       });
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setErrorMessage(ErrorMessage.DEFAULT);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [errorMessage]);
 
   const filteredTodos = useMemo(() => {
     return filterTodo(todos, filterStatus);
@@ -52,9 +59,11 @@ export const App: React.FC = () => {
   };
 
   const handleUpdateTodo = (updatedTodo: Todo) => {
-    setTodos(
-      todos.map(todo => (todo.id === updatedTodo.id ? updatedTodo : todo)),
+    const updatedTodos = todos.map(todo =>
+      todo.id === updatedTodo.id ? updatedTodo : todo,
     );
+
+    setTodos(updatedTodos);
   };
 
   const handleOnChangeTodoStatus = (id: number) => {
@@ -62,9 +71,11 @@ export const App: React.FC = () => {
 
     if (currentTodo) {
       currentTodo.completed = !currentTodo.completed;
-      setTodos(
-        todos.map(todo => (todo.id === currentTodo.id ? currentTodo : todo)),
+      const todosWithChange = todos.map(todo =>
+        todo.id === currentTodo.id ? currentTodo : todo,
       );
+
+      setTodos(todosWithChange);
     }
   };
 
@@ -75,15 +86,24 @@ export const App: React.FC = () => {
       isAllChecked.current = true;
     }
 
-    setTodos(todos.map(todo => ({ ...todo, completed: isAllChecked.current })));
+    const checkAllTodos = todos.map(todo => ({
+      ...todo,
+      completed: isAllChecked.current,
+    }));
+
+    setTodos(checkAllTodos);
   };
 
   const handleOnDelete = (todoId: number) => {
-    setTodos(todos.filter(todo => todo.id !== todoId));
+    const todosAfterDelete = todos.filter(todo => todo.id !== todoId);
+
+    setTodos(todosAfterDelete);
   };
 
   const handleClearAllCompleted = () => {
-    setTodos(todos.filter(todo => !todo.completed));
+    const todosWithoutCompleted = todos.filter(todo => !todo.completed);
+
+    setTodos(todosWithoutCompleted);
   };
 
   return (
@@ -99,13 +119,13 @@ export const App: React.FC = () => {
 
         <TodoList
           todos={filteredTodos}
-          OnUpdateTodo={handleUpdateTodo}
-          OnChangeTodoStatus={handleOnChangeTodoStatus}
-          OnDelete={handleOnDelete}
+          onUpdateTodo={handleUpdateTodo}
+          onChangeTodoStatus={handleOnChangeTodoStatus}
+          onDelete={handleOnDelete}
         />
 
         {/* Hide the footer if there are no todos */}
-        {todos.length > 0 && (
+        {!!todos.length && (
           <FooterTodoApp
             todos={todos}
             setFilterStatus={setFilterStatus}

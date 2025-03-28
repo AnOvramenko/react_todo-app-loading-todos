@@ -6,26 +6,27 @@ import { SubmitForm } from './SubmitForm';
 
 interface Props {
   todo: Todo;
-  OnChangeTodoStatus: (id: number) => void;
-  OnDelete: (id: number) => void;
-  OnUpdateTodo: (todo: Todo) => void;
+  onChangeTodoStatus: (id: number) => void;
+  onDelete: (id: number) => void;
+  onUpdateTodo: (todo: Todo) => void;
 }
 
 export const TodoItem: React.FC<Props> = ({
   todo,
-  OnChangeTodoStatus,
-  OnDelete,
-  OnUpdateTodo,
+  onChangeTodoStatus,
+  onDelete,
+  onUpdateTodo,
 }) => {
   const [isUpdate, setIsUpdate] = useState(false);
+  const { completed, id, title } = todo;
 
   return (
     <div
       onDoubleClick={() => setIsUpdate(true)}
-      key={todo.id}
+      key={id}
       data-cy="Todo"
       className={cn('todo', {
-        completed: todo.completed,
+        completed: completed,
       })}
     >
       <label className="todo__status-label">
@@ -33,8 +34,8 @@ export const TodoItem: React.FC<Props> = ({
           data-cy="TodoStatus"
           type="checkbox"
           className="todo__status"
-          onChange={() => OnChangeTodoStatus(todo.id)}
-          checked={todo.completed}
+          onChange={() => onChangeTodoStatus(id)}
+          checked={completed}
         />
       </label>
 
@@ -42,9 +43,9 @@ export const TodoItem: React.FC<Props> = ({
         <SubmitForm
           updateTodo={todo}
           setIsUpdate={setIsUpdate}
-          OnUpdateTodo={OnUpdateTodo}
+          onUpdateTodo={onUpdateTodo}
           inputClassName={'todo__title-field'}
-          OnDelete={OnDelete}
+          onDelete={onDelete}
         />
       ) : (
         <>
@@ -53,13 +54,13 @@ export const TodoItem: React.FC<Props> = ({
             className="todo__title"
             contentEditable={isUpdate}
           >
-            {todo.title}
+            {title}
           </span>
           <button
             type="button"
             className="todo__remove"
             data-cy="TodoDelete"
-            onClick={() => OnDelete(todo.id)}
+            onClick={() => onDelete(todo.id)}
           >
             ×
           </button>

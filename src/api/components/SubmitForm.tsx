@@ -9,8 +9,8 @@ interface Props {
 
   updateTodo?: Todo;
   setIsUpdate?: (val: boolean) => void;
-  OnUpdateTodo?: (todo: Todo) => void;
-  OnDelete?: (id: number) => void;
+  onUpdateTodo?: (todo: Todo) => void;
+  onDelete?: (id: number) => void;
 }
 
 export const SubmitForm: React.FC<Props> = ({
@@ -18,16 +18,19 @@ export const SubmitForm: React.FC<Props> = ({
   onAddTodo,
   updateTodo,
   setIsUpdate,
-  OnUpdateTodo,
+  onUpdateTodo,
   inputClassName,
-  OnDelete,
+  onDelete,
 }) => {
   const [inputQuery, setInputQuery] = useState(updateTodo?.title || '');
+
+  const isUpdate = updateTodo && setIsUpdate && onUpdateTodo && onDelete;
+  const isAdd = todos && onAddTodo;
 
   const handleOnSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (updateTodo && setIsUpdate && OnUpdateTodo && OnDelete) {
+    if (isUpdate) {
       if (inputQuery.trim()) {
         const updatedTodo = {
           id: updateTodo.id,
@@ -36,15 +39,15 @@ export const SubmitForm: React.FC<Props> = ({
           completed: updateTodo.completed,
         };
 
-        OnUpdateTodo(updatedTodo);
+        onUpdateTodo(updatedTodo);
       } else {
-        OnDelete(updateTodo.id);
+        onDelete(updateTodo.id);
       }
 
       setIsUpdate(false);
     }
 
-    if (todos && onAddTodo) {
+    if (isAdd) {
       if (!inputQuery.trim()) {
         return;
       }
@@ -57,7 +60,6 @@ export const SubmitForm: React.FC<Props> = ({
         title: inputQuery,
         completed: false,
       };
-      // console.log(newTodo)
 
       onAddTodo(newTodo);
       setInputQuery('');
@@ -65,9 +67,7 @@ export const SubmitForm: React.FC<Props> = ({
   };
 
   const handleOnBlur = () => {
-    if (updateTodo && setIsUpdate && OnUpdateTodo && OnDelete) {
-      // setIsUpdate(false);
-
+    if (isUpdate) {
       if (inputQuery.trim()) {
         const updatedTodo = {
           id: updateTodo.id,
@@ -76,9 +76,9 @@ export const SubmitForm: React.FC<Props> = ({
           completed: updateTodo.completed,
         };
 
-        OnUpdateTodo(updatedTodo);
+        onUpdateTodo(updatedTodo);
       } else {
-        OnDelete(updateTodo.id);
+        onDelete(updateTodo.id);
       }
 
       setIsUpdate(false);

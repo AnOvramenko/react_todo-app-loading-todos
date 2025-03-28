@@ -33,7 +33,6 @@ export const HeaderTodoApp: React.FC<Props> = ({
         onAddTodo={onAddTodo}
         inputClassName={'todoapp__new-todo'}
       />
-      {/* Add a todo on form submit */}
     </header>
   );
 };
